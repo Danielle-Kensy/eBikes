@@ -20,11 +20,12 @@ const Content = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  margin-top: 10%;
+  margin-top: 8%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 10px;
+  align-items: center;
   justify-items: center;
+  z-index: 10;
 `;
 
 const OrderCard = styled.div`
@@ -33,9 +34,8 @@ const OrderCard = styled.div`
   align-items: center;
   justify-content: space-around;
   width: 80%;
-  height: 30%;
+  height: 60%;
   border-radius: 10px;
-  margin-bottom: 20px;
   border: 4px dashed #93b48b;
   p {
     margin-bottom: 5px;
@@ -79,6 +79,7 @@ const ListOrdersPage = () => {
     return <CartCard key={prod.id} bike={prod} />;
   });
 
+  //ajustar endpoint de order pra retornar img da bike
   console.log(selectedOrder);
 
   return (

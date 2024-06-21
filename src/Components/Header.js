@@ -3,6 +3,8 @@ import { useHistory } from "react-router-dom";
 
 const HeaderWrapper = styled.div`
   position: fixed;
+  z-index: 12;
+  background-color: white;
   margin-top: 0;
   width: 100%;
   height: 10%;

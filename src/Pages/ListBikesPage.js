@@ -188,6 +188,8 @@ const ListBikesPage = () => {
     return `R$ ${calculateTotal() / installments},00`
   };
 
+  console.log(purchaseList)
+
   return (
     <Main>
       <Header />

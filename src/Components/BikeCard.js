@@ -55,7 +55,7 @@ const StyledTag = styled.p`
 const BikeCard = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { color, marches, brand, model, price, categorys } = props.bike;
+  const { color, marches, brand, model, price, categorys, img } = props.bike;
 
   const buyBike = () => {
     props.addItemToCart(props.bike);
@@ -71,7 +71,7 @@ const BikeCard = (props) => {
   return (
     <>
       <Card onClick={() => setIsModalOpen(true)}>
-        <img src={ecobike} alt="Imagem da viagem" />
+        <img src={img} alt="Imagem da viagem" />
         <p>
           <b>Marca - </b> {brand}
         </p>
@@ -106,7 +106,7 @@ const BikeCard = (props) => {
         width={"600px"}
       >
         <ContentWrapper>
-          <ImageFrame src={ecobike} alt="Imagem da viagem" />
+          <ImageFrame src={img} alt="Imagem da viagem" />
         </ContentWrapper>
         <DetailsWrapper>
           <h2>

@@ -25,11 +25,14 @@ const Card = styled.div`
 `;
 
 const CartCard = (props) => {
-  const { price, model } = props.bike;
+  const { price, model, img } = props.bike;
 
+  console.log(props.bike)
+
+  console.log(img)
   return (
     <Card>
-      <img src={ecobike} alt="Imagem da bike" />
+      <img src={img} alt="Imagem da bike" />
       <p>
         {" "}
         {model} - <b>R$ </b> {price},00
