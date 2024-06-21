@@ -1,7 +1,7 @@
 # <div align = "center"> eBikes🚲 </div>
 
 <div align = "center">
-<img src=""  width="200" height="200" /> 
+<img src="https://github.com/Danielle-Kensy/eBikes/blob/main/src/img/bike.png"  width="200" height="200" /> 
 </div>
 
 </BR>
