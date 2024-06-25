@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import UseGetData from "../Hooks/UseGetDate";
-import { useHistory } from "react-router-dom";
 import { UseProtectedPage } from "../Hooks/UsePotectedPage";
 import Header from "../Components/Header";
 import BikeCard from "../Components/BikeCard";
@@ -12,7 +11,8 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import CartCard from "../Components/CartCard";
 import UseForm from "../Hooks/UseForm";
 import UseGetProtectedData from "../Hooks/UseGetProtected";
-import axios from "axios"
+import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 
 const ListDiv = styled.div`
   display: flex;
@@ -69,25 +69,29 @@ const DateWrapper = styled.div`
   }
 `;
 
+const StyledButton = styled.button`
+  width: 100%;
+  &:hover {
+    background-color: #4d5e48;
+  }
+`;
+
 const ListBikesPage = () => {
   UseProtectedPage();
 
-  //Estado para navegação entre as páginas
-  const history = useHistory();
-
   //dados retornados da API
   const [getBikes] = UseGetData("/bike", {});
-  const [getUser] = UseGetProtectedData("user/profile", {})
+  const [getUser] = UseGetProtectedData("user/profile", {});
 
   //estados para controle do carrinho
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [purchaseList, setPurchaseList] = useState([]);
-  const [selectedAddress, setSelectedAddress] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   //estados formulário
-  const { form, onChange } = UseForm({
+  const { form, onChange, cleanFields } = UseForm({
     type: "",
     paymentDate: "",
     dueDate: "",
@@ -99,7 +103,6 @@ const ListBikesPage = () => {
   const removeItemFromCart = (id) => {
     const newPurchaseList = purchaseList.filter((item) => item.id !== id);
     setPurchaseList(newPurchaseList);
-    console.log(newPurchaseList);
   };
 
   // Método que adiciona item no carrinho
@@ -133,7 +136,7 @@ const ListBikesPage = () => {
   };
 
   const handleOk = () => {
-    setIsLoading(true)
+    setIsLoading(true);
     //criando objeto do pedido esperado pela requisição
     const order = {
       user_id: getUser?.id ?? null,
@@ -141,34 +144,36 @@ const ListBikesPage = () => {
       payment: {
         type: form?.type ?? null,
         installments: form?.installments !== "" ? form?.installments : null,
-        totalAmount: 800,
+        totalAmount: calculateTotal(),
         paymentDate: form?.paymentDate !== "" ? form?.paymentDate : null,
         dueDate: form?.dueDate !== "" ? form?.dueDate : null,
       },
       products: purchaseList?.map((item) => ({
         id: item.props.bike?.id ?? null,
         quantity: 1,
-        price: item.props.bike?.price ?? null
-      }))
-    }
-    console.log(order)
-    const URL = `http://localhost:3003/order/make`
+        price: item.props.bike?.price ?? null,
+      })),
+    };
+    console.log(order);
+    const URL = `http://localhost:3003/order/make`;
 
     //requisição para criar pedido
     axios
-    .post(URL, order)
-        
-    .then(() => {
-        setIsLoading(false)
-        alert("Pedido realizado com sucesso")
-        history.push("/ListOrders")
+      .post(URL, order)
 
-    })
-    .catch((err) => {
-        console.log(err)
-        setIsLoading(false)
-        alert("Erro ao fazer pedido")
-    });
+      .then(() => {
+        setIsLoading(false);
+        toast.success("Pedido realizado com sucesso, confira em meus pedidos!");
+        setIsModalOpen(false);
+        cleanFields();
+        setPurchaseList([]);
+        
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+        toast.error("Erro ao fazer pedido");
+      });
   };
 
   const openModalCloseDrawer = () => {
@@ -185,10 +190,8 @@ const ListBikesPage = () => {
   };
 
   const calculateInstallments = (installments) => {
-    return `R$ ${calculateTotal() / installments},00`
+    return `R$ ${calculateTotal() / installments},00`;
   };
-
-  console.log(purchaseList)
 
   return (
     <Main>
@@ -214,13 +217,13 @@ const ListBikesPage = () => {
         footer={[
           <>
             <p>Total: R${calculateTotal()},00</p>
-            <button
+            <StyledButton
               key="back"
               onClick={() => openModalCloseDrawer()}
               style={{ width: "100%" }}
             >
               Finalizar Compra
-            </button>
+            </StyledButton>
           </>,
         ]}
       >
@@ -251,7 +254,10 @@ const ListBikesPage = () => {
         {purchaseList}
         <h3>Total: R${calculateTotal()},00</h3>
         <h2>Selecione o endereço de entrega:</h2>
-        <Radio value={getUser?.address?.id} onClick={(e) => setSelectedAddress(e.target.value)}>
+        <Radio
+          value={getUser?.address?.id}
+          onClick={(e) => setSelectedAddress(e.target.value)}
+        >
           {getUser?.address?.street} {getUser?.address?.number}
         </Radio>
         <h2>Informe o método de pagamento:</h2>
@@ -292,15 +298,12 @@ const ListBikesPage = () => {
               <p>Data de pagamento</p>
               <input type="date" onChange={onChange} name="paymentDate" />
               <p>Data de vencimento</p>
-              <input
-                type="date"
-                onChange={onChange}
-                name="dueDate"
-              />
+              <input type="date" onChange={onChange} name="dueDate" />
             </DateWrapper>
           )}
         </Form>
       </Modal>
+      <Toaster position="top-center" reverseOrder={false} />
     </Main>
   );
 };

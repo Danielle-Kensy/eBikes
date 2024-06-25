@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
     width: 120px;
     height: 45px;
 
-    :hover{
+    &:hover{
       cursor: pointer;
       background-color: #4F7142;
     }

@@ -1,6 +1,6 @@
 import React from "react";
 import ListBikesPage from "../Pages/ListBikesPage";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "../Pages/LoginPage";
 import error from "../img/error.png";
 import styled from "styled-components";
@@ -15,23 +15,15 @@ const Frame = styled.img`
 const Router = () => {
   return (
     <BrowserRouter>
-      <Switch>
-        <Route exact path={"/"}>
-          <LoginPage></LoginPage>
-        </Route>
-
-        <Route exact path={"/ListBikes"}>
-          <ListBikesPage></ListBikesPage>
-        </Route>
-
-        <Route exact path={"/ListOrders"}>
-          <ListOrdersPage></ListOrdersPage>
-        </Route>
-
-        <Route>
-          <Frame src={error} alt="FOTO DE ERRO" />
-        </Route>
-      </Switch>
+      <Routes>
+        <Route exact path="/" element={<LoginPage />} />
+        <Route exact path="/ListBikes" element={<ListBikesPage />} />
+        <Route exact path="/ListOrders" element={<ListOrdersPage />} />
+        <Route
+          path="*"
+          element={<Frame src={error} alt="FOTO DE ERRO" />}
+        />
+      </Routes>
     </BrowserRouter>
   );
 };

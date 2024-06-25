@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import ecobike from "../img/ecobike.png";
 import { Modal, Button, Tag } from "antd";
+import {Toaster, toast} from 'react-hot-toast';
 
 const Card = styled.div`
   width: 220px;
@@ -23,9 +23,16 @@ const Card = styled.div`
     margin: 5px;
     font-weight: 600;
   }
-  :hover {
+  &:hover {
     cursor: pointer;
     border: 5px solid #93b48b;
+  }
+  button {
+    height: 30px;
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: #51624d;
   }
 `;
 
@@ -49,8 +56,8 @@ const DetailsWrapper = styled.div`
 `;
 
 const StyledTag = styled.p`
-    margin-left: 28px;
-`
+  margin-left: 28px;
+`;
 
 const BikeCard = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,7 +66,7 @@ const BikeCard = (props) => {
 
   const buyBike = () => {
     props.addItemToCart(props.bike);
-    alert("Produto adicionado ao carrinho!");
+    toast.success('Produto adicionado ao carrinho!')
   };
 
   const categorysList = categorys.map((category) => (
@@ -84,7 +91,7 @@ const BikeCard = (props) => {
       <Modal
         title={
           <h2>
-            Comprar {brand} {model}
+            Detalhes {brand} {model}
           </h2>
         }
         open={isModalOpen}
@@ -112,15 +119,16 @@ const BikeCard = (props) => {
           <h2>
             <b>R$ </b> {price},00
           </h2>
-          </DetailsWrapper>
-          <ul>
-            <li>
+        </DetailsWrapper>
+        <ul>
+          <li>
             <b>Marca - </b> {brand}
-            </li>
+          </li>
           <li>Marchas - {marches}</li>
           <li>Modelo - {model}</li>
-          </ul>
-          <StyledTag>{categorysList}</StyledTag>
+        </ul>
+        <StyledTag>{categorysList}</StyledTag>
+        <Toaster position="top-center" reverseOrder={false} />
       </Modal>
     </>
   );

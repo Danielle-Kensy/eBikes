@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Header from "../Components/Header";
 import styled from "styled-components";
 import UseGetProtectedData from "../Hooks/UseGetProtected";
 import { getId } from "../utils/localStorage";
 import { formatarData } from "../utils/formatDate";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { statesMap } from "../utils/statesMap";
 import { Modal, Button } from "antd";
 import CartCard from "../Components/CartCard";
@@ -20,10 +20,9 @@ const Content = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  margin-top: 8%;
+  margin-top: 10%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  align-items: center;
   justify-items: center;
   z-index: 10;
 `;
@@ -33,14 +32,18 @@ const OrderCard = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  width: 80%;
-  height: 60%;
+  width: 400px;
+  height: 200px;
   border-radius: 10px;
-  border: 4px dashed #93b48b;
+  border: 4px dashed #8491a3;
   p {
     margin-bottom: 5px;
     margin-top: 5px;
     font-weight: 500;
+  }
+  &:hover {
+    cursor: pointer;
+    border: 4px dashed #93b48b;
   }
 `;
 
@@ -53,9 +56,7 @@ const ListOrdersPage = () => {
   const [selectedOrder, setSelectedOrder] = useState({});
 
   //navegação
-  const history = useHistory();
-
-  console.log(getOrders);
+  const navigate = useNavigate();
 
   const handleOpenModal = (order) => {
     setSelectedOrder(order);
@@ -79,14 +80,11 @@ const ListOrdersPage = () => {
     return <CartCard key={prod.id} bike={prod} />;
   });
 
-  //ajustar endpoint de order pra retornar img da bike
-  console.log(selectedOrder);
-
   return (
     <Main>
       <Header />
       <button
-        onClick={() => history.push("/ListBikes")}
+        onClick={() => navigate("/ListBikes")}
         style={{
           position: "absolute",
           top: "90px",
@@ -99,9 +97,13 @@ const ListOrdersPage = () => {
       </button>
 
       {ordersList.length > 0 ? (
-        <Content>{ordersList}</Content>
+        <Content>
+          {ordersList}
+        </Content>
       ) : (
-        <Content><Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} /> </Content>
+        <Content>
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />{" "}
+        </Content>
       )}
       <Modal
         title={<h2>Detalhes do pedido</h2>}

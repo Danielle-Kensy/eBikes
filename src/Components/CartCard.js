@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import ecobike from "../img/ecobike.png";
 
 const Card = styled.div`
   width: 100%;

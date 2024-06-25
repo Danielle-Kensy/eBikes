@@ -1,10 +1,11 @@
 import React from 'react'
 import { useState } from "react"
-import axios from 'axios';
+import axios from 'axios'
 import styled from "styled-components"
-import {useHistory} from "react-router-dom"
+import { useNavigate } from 'react-router-dom'
 import { setId, setToken } from '../utils/localStorage'
 import bike from "../img/bike.png"
+import { toast, Toaster } from 'react-hot-toast';
 
 const Buttons = styled.div`
     justify-content: space-around;
@@ -17,7 +18,7 @@ const LogoFrame = styled.img`
     width: 13vw;
     height: 25vh;
     position: absolute;
-    top: 10%;
+    top: 9%;
     left: 43%;
 `
 
@@ -41,8 +42,7 @@ const LoginPage = () => {
 
     //navegação
 
-    const history = useHistory();
-
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -70,18 +70,17 @@ const LoginPage = () => {
         .then(({ data }) => {
             setToken(data.token);
             setId(data.id);
-            history.push("/ListBikes")
-            console.log(data);
+            navigate("/ListBikes")
         })
 
         .catch((err) => {
-            console.log(err)
-            alert("Usuário ou Senha incorretos")
+            toast.error("Usuário ou Senha incorretos!")
         });
     }
 
     return (
         <>
+        <Toaster position="top-center" reverseOrder={false} />
         <LogoFrame src={bike} alt="logo" />
 
         <FormWrapper>
@@ -93,6 +92,7 @@ const LoginPage = () => {
                     type={"email"}
                     onChange={onChangeEmail}
                     value={email}
+                    data-testid="mail"
                 />
                 <Input
                     placeholder={"Senha"}
@@ -100,6 +100,7 @@ const LoginPage = () => {
                     type={"password"}
                     onChange={onChangePassword}
                     value={password}
+                    data-testid="password"
                 />
             </form>
             <Buttons>

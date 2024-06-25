@@ -13,8 +13,8 @@ const UseGetProtectedData = (endpoint, initialState) => {
                 Authorization: token 
             }
         })
-        .then((res) => setData(res.data))
-        .catch((err) => console.log(err.response.data.message))
+        .then((res) => setData(res?.data))
+        .catch((err) => console.log(err?.response?.data?.message))
     }
 
     useEffect(() => {

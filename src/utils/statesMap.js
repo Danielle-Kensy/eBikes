@@ -39,5 +39,18 @@ export const statesMap = (state) => {
           Cancelado
         </button>
       );
+      default:
+        return (
+          <button
+            style={{
+              backgroundColor: "#6bc6e2",
+              height: "30px",
+              marginBottom: 0,
+              width: "100px",
+            }}
+          >
+            Status não encontrado
+          </button>
+        );
   }
 };

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const HeaderWrapper = styled.div`
   position: fixed;
@@ -25,20 +25,20 @@ const Buttons = styled.div`
 `;
 
 const Header = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("token");
-    history.push("/");
+    navigate('/');
   };
 
   const goToOrders = () => {
-    history.push("/ListOrders");
+    navigate("/ListOrders");
   };
 
   return (
     <HeaderWrapper>
-      <h1>eBikes</h1>
+      <h1>eBikes Express</h1>
       <Buttons>
         <button
           style={{ height: "20px", marginBottom: "5px" }}
