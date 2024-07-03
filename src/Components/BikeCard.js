@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Modal, Button, Tag } from "antd";
-import {Toaster, toast} from 'react-hot-toast';
+import { Modal, Button, Tag, notification } from "antd";
 
 const Card = styled.div`
   width: 220px;
@@ -61,12 +60,16 @@ const StyledTag = styled.p`
 
 const BikeCard = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [notify, contextHolder] = notification.useNotification();
 
-  const { color, marches, brand, model, price, categorys, img } = props.bike;
+  const { id, color, marches, brand, model, price, categorys, img } =
+    props.bike;
 
   const buyBike = () => {
     props.addItemToCart(props.bike);
-    toast.success('Produto adicionado ao carrinho!')
+    notify.success({
+      message: "Produto adicionado ao carrinho!",
+    });
   };
 
   const categorysList = categorys.map((category) => (
@@ -77,7 +80,8 @@ const BikeCard = (props) => {
 
   return (
     <>
-      <Card onClick={() => setIsModalOpen(true)}>
+      {contextHolder}
+      <Card key={id} data-testid="card" onClick={() => setIsModalOpen(true)}>
         <img src={img} alt="Imagem da viagem" />
         <p>
           <b>Marca - </b> {brand}
@@ -98,16 +102,22 @@ const BikeCard = (props) => {
         onClose={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
         footer={[
-          <Button key="back" onClick={() => setIsModalOpen(false)} danger>
+          <Button
+            key="back"
+            data-testid="close"
+            onClick={() => setIsModalOpen(false)}
+            danger
+          >
             Cancelar
           </Button>,
           <Button
             key="submit"
+            data-testid="buy"
             type="primary"
             onClick={buyBike}
-            style={{ backgroundColor: "#93B48B" }}
+            style={{ backgroundColor: "#93B48B", width: "150px" }}
           >
-            Comprar
+            Adicionar ao carrinho
           </Button>,
         ]}
         width={"600px"}
@@ -128,7 +138,6 @@ const BikeCard = (props) => {
           <li>Modelo - {model}</li>
         </ul>
         <StyledTag>{categorysList}</StyledTag>
-        <Toaster position="top-center" reverseOrder={false} />
       </Modal>
     </>
   );

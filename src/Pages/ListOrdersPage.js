@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Header from "../Components/Header";
 import styled from "styled-components";
-import UseGetProtectedData from "../Hooks/UseGetProtected";
+import UseGetData from "../Hooks/UseGetDate";
 import { getId } from "../utils/localStorage";
-import { formatarData } from "../utils/formatDate";
+import { formatDate } from "../utils/formatDate";
 import { useNavigate } from "react-router-dom";
 import { statesMap } from "../utils/statesMap";
 import { Modal, Button } from "antd";
@@ -49,7 +49,7 @@ const OrderCard = styled.div`
 
 const ListOrdersPage = () => {
   //pegar dados do pedido
-  const [getOrders] = UseGetProtectedData(`order/${getId()}`, []);
+  const [getOrders] = UseGetData(`/order/428e75c3-418e-4d5d-867a-7db7e44c5ce0`, []);
 
   //estados para controle da modal
   const [open, setOpen] = useState(false);
@@ -67,7 +67,7 @@ const ListOrdersPage = () => {
   const ordersList = getOrders?.map((order) => {
     return (
       <OrderCard key={order.id}>
-        <p>Pedido feito em {formatarData(order.created_at)}</p>
+        <p>Pedido feito em {formatDate(order.created_at)}</p>
         <p>Estado do pedido: {statesMap(order.payment.state)}</p>
         <p>Valor total: R${order.payment.totalAmount},00</p>
         <button onClick={() => handleOpenModal(order)}>ver detalhes</button>
@@ -113,6 +113,7 @@ const ListOrdersPage = () => {
         footer={[
           <Button
             key="back"
+            data-testid="close"
             onClick={() => setOpen(false)}
             style={{ backgroundColor: "#b55757", color: "white" }}
           >
@@ -120,7 +121,7 @@ const ListOrdersPage = () => {
           </Button>,
         ]}
       >
-        <h3>Pedido feito em {formatarData(selectedOrder?.created_at)}</h3>
+        <h3>Data da compra: {formatDate(selectedOrder?.created_at)}</h3>
         <p>Valor total: R${selectedOrder?.payment?.totalAmount},00</p>
         <p>
           Método de pagamento:{" "}

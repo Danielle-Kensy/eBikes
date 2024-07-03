@@ -6,13 +6,13 @@ import Header from "../Components/Header";
 import BikeCard from "../Components/BikeCard";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
-import { FloatButton, Drawer, Modal, Button, Radio } from "antd";
+import { FloatButton, Drawer, Modal, Button, Radio, notification } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import CartCard from "../Components/CartCard";
 import UseForm from "../Hooks/UseForm";
 import UseGetProtectedData from "../Hooks/UseGetProtected";
 import axios from "axios";
-import { Toaster, toast } from "react-hot-toast";
+import { calculateTotal } from "../utils/calculateTotal";
 
 const ListDiv = styled.div`
   display: flex;
@@ -28,6 +28,7 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 200px 200px 200px 200px;
   column-gap: 90px;
+  row-gap: 60px;
 
   img {
     grid-column: 2;
@@ -83,10 +84,12 @@ const ListBikesPage = () => {
   const [getBikes] = UseGetData("/bike", {});
   const [getUser] = UseGetProtectedData("user/profile", {});
 
+  const [notify, contextHolder] = notification.useNotification();
+
   //estados para controle do carrinho
+  const [purchaseList, setPurchaseList] = useState([]);
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [purchaseList, setPurchaseList] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -103,17 +106,21 @@ const ListBikesPage = () => {
   const removeItemFromCart = (id) => {
     const newPurchaseList = purchaseList.filter((item) => item.id !== id);
     setPurchaseList(newPurchaseList);
+    notify.error({
+      message: 'Produto removido do carrinho!',
+    });
   };
 
   // Método que adiciona item no carrinho
   const addItemToCart = (bike) => {
+    console.log('teste')
     const newPurchaseList = [
       ...purchaseList,
       <CartCard
-        key={bike?.id}
         bike={bike}
         removeItemFromCart={removeItemFromCart}
         showRemoveButton={true}
+        data-testid="card"
       />,
     ];
     setPurchaseList(newPurchaseList);
@@ -122,9 +129,12 @@ const ListBikesPage = () => {
   //lista de todos as bikes disponíveis
   const bikesList =
     getBikes?.length > 0 &&
-    getBikes.map((bike, i) => {
-      return <BikeCard key={i} bike={bike} addItemToCart={addItemToCart} />;
+    getBikes.map((bike) => {
+      return <BikeCard key={bike.id} bike={bike} addItemToCart={addItemToCart} />;
     });
+
+    console.log(bikesList)
+    console.log(purchaseList)
 
   //método para administrar o carrinho
   const onClose = () => {
@@ -144,7 +154,7 @@ const ListBikesPage = () => {
       payment: {
         type: form?.type ?? null,
         installments: form?.installments !== "" ? form?.installments : null,
-        totalAmount: calculateTotal(),
+        totalAmount: calculateTotal(purchaseList),
         paymentDate: form?.paymentDate !== "" ? form?.paymentDate : null,
         dueDate: form?.dueDate !== "" ? form?.dueDate : null,
       },
@@ -154,7 +164,6 @@ const ListBikesPage = () => {
         price: item.props.bike?.price ?? null,
       })),
     };
-    console.log(order);
     const URL = `http://localhost:3003/order/make`;
 
     //requisição para criar pedido
@@ -163,16 +172,19 @@ const ListBikesPage = () => {
 
       .then(() => {
         setIsLoading(false);
-        toast.success("Pedido realizado com sucesso, confira em meus pedidos!");
+        notify.success({
+          message: 'Pedido realizado com sucesso, confira em meus pedidos!',
+        });
         setIsModalOpen(false);
         cleanFields();
         setPurchaseList([]);
-        
       })
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
-        toast.error("Erro ao fazer pedido");
+        notify.error({
+          message: 'Erro ao realizar o pedido, tente novamente',
+        });
       });
   };
 
@@ -181,20 +193,13 @@ const ListBikesPage = () => {
     setIsModalOpen(true);
   };
 
-  const calculateTotal = () => {
-    let total = 0;
-    purchaseList.forEach((item) => {
-      total += item.props.bike?.price ?? 0;
-    });
-    return total;
-  };
-
   const calculateInstallments = (installments) => {
-    return `R$ ${calculateTotal() / installments},00`;
+    return `R$ ${calculateTotal(purchaseList) / installments},00`;
   };
 
   return (
     <Main>
+      {contextHolder}
       <Header />
       <ListDiv>
         {bikesList && bikesList.length > 0 ? (
@@ -209,14 +214,15 @@ const ListBikesPage = () => {
         style={{ right: 94 }}
         icon={<ShoppingCartOutlined />}
         onClick={() => setOpen(true)}
+        data-testid="cart"
       />
       <Drawer
         title="Carrinho 🛒"
         onClose={onClose}
         open={open}
         footer={[
-          <>
-            <p>Total: R${calculateTotal()},00</p>
+          <div key={'footer'}>
+            <p>Total: R${calculateTotal(purchaseList)},00</p>
             <StyledButton
               key="back"
               onClick={() => openModalCloseDrawer()}
@@ -224,7 +230,7 @@ const ListBikesPage = () => {
             >
               Finalizar Compra
             </StyledButton>
-          </>,
+          </div>,
         ]}
       >
         {purchaseList}
@@ -252,7 +258,7 @@ const ListBikesPage = () => {
       >
         <p>{getUser.name}, você está prestes a finalizar sua compra!</p>
         {purchaseList}
-        <h3>Total: R${calculateTotal()},00</h3>
+        <h3>Total do pedido: R${calculateTotal(purchaseList)},00</h3>
         <h2>Selecione o endereço de entrega:</h2>
         <Radio
           value={getUser?.address?.id}
@@ -272,8 +278,8 @@ const ListBikesPage = () => {
             <option value={""} disabled>
               Escolha o tipo
             </option>
-            <option value={"bill"}>Boleto</option>
-            <option value={"card"}>Cartão</option>
+            <option data-testid="bill" value={"bill"}>Boleto</option>
+            <option data-testid="card" value={"card"}>Cartão</option>
           </select>
 
           {form.type === "card" && (
@@ -283,6 +289,7 @@ const ListBikesPage = () => {
               value={form.installments}
               onChange={onChange}
               required
+              data-testid="installments"
             >
               <option value={""} disabled>
                 Escolha a quantidade de parcelas
@@ -303,7 +310,6 @@ const ListBikesPage = () => {
           )}
         </Form>
       </Modal>
-      <Toaster position="top-center" reverseOrder={false} />
     </Main>
   );
 };

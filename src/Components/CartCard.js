@@ -24,20 +24,18 @@ const Card = styled.div`
 `;
 
 const CartCard = (props) => {
-  const { price, model, img } = props.bike;
+  const { price, model, img, quantity } = props.bike;
 
-  console.log(props.bike)
-
-  console.log(img)
   return (
     <Card>
       <img src={img} alt="Imagem da bike" />
       <p>
         {" "}
-        {model} - <b>R$ </b> {price},00
+        {quantity ?? '1'} x {model} - R$ {price},00
       </p>
       {props.showRemoveButton && (
         <button
+          data-testid="remove"
           style={{
             backgroundColor: "#c75661",
             height: "30px",

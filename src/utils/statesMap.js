@@ -16,6 +16,7 @@ export const statesMap = (state) => {
     case "paid":
       return (
         <button
+          data-testid="paid"
           style={{
             backgroundColor: "#98e48b",
             height: "30px",

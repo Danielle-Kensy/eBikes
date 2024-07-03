@@ -1,4 +1,4 @@
-import BikeCard from "./BikeCard";
+import BikeCard from "../Components/BikeCard";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import React from "react";

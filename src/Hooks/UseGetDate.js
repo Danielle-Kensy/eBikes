@@ -7,8 +7,8 @@ const UseGetData = (endpoint, initialState) => {
     const getData = () => {
         axios.get(`http://localhost:3003${endpoint}`, {
         })
-        .then((res) => setData(res.data))
-        .catch((err) => alert(err.response.data.message))
+        .then((res) => setData(res?.data))
+        .catch((err) => console.log(err.response?.data?.message))
     }
 
     useEffect(() => {
