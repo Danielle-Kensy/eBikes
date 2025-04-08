@@ -9,6 +9,10 @@ const GlobalStyle = createGlobalStyle`
     height: 100vh;
     /* margin: 30px 0; */
     padding: 0;
+    @media (max-width: 768px) {
+      width: 100vw;
+      height: 100vh;
+  }
   }
 
   button {

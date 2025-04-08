@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
+import bike from "../img/bike.png";
 
 const HeaderWrapper = styled.div`
   position: fixed;
@@ -22,6 +23,9 @@ const Buttons = styled.div`
   align-items: center;
   justify-content: center;
   margin-right: 40px;
+  button {
+    border-radius: 7px;
+  }
 `;
 
 const Header = () => {
@@ -38,13 +42,13 @@ const Header = () => {
 
   return (
     <HeaderWrapper>
-      <h1>eBikes Express</h1>
+      <img src={bike} width={'60px'}/>
       <Buttons>
         <button
           style={{ height: "20px", marginBottom: "5px" }}
           onClick={goToOrders}
         >
-          Meus pedidos
+          Estações
         </button>
         <button
           onClick={logout}

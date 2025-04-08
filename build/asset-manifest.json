@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e6c13ad2.css",
+    "main.js": "/static/js/main.bca09817.js",
+    "static/media/orlaguaiba.jpg": "/static/media/orlaguaiba.acb3c7e6b2f4a6044c92.jpg",
+    "static/media/biker.png": "/static/media/biker.96e06cd0a8054c74a1a6.png",
+    "static/media/error.png": "/static/media/error.7a42337b87b744ac1a35.png",
+    "static/media/gasometro.jpg": "/static/media/gasometro.1c3cdc7f9d01720dca14.jpg",
+    "static/media/meninodeus.jpeg": "/static/media/meninodeus.9f1018e52a29968d5996.jpeg",
+    "static/media/ch.png": "/static/media/ch.e2eb7c7a770aa6ebc458.png",
+    "static/media/bike.png": "/static/media/bike.7a44ab95ba0454fa6edf.png",
+    "index.html": "/index.html",
+    "main.e6c13ad2.css.map": "/static/css/main.e6c13ad2.css.map",
+    "main.bca09817.js.map": "/static/js/main.bca09817.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.bca09817.js"
+  ]
+}

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import biker from "../img/biker.png";
 
 const Card = styled.div`
   width: 100%;
@@ -19,7 +20,15 @@ const Card = styled.div`
   p {
     color: black;
     margin: 5px;
+    margin-left: 0;
     font-weight: 600;
+  }
+  @media (max-width: 768px) {
+    img {
+    width: 25%;
+    height: 75%;
+    margin: 0;
+  }
   }
 `;
 
@@ -28,11 +37,8 @@ const CartCard = (props) => {
 
   return (
     <Card>
-      <img src={img} alt="Imagem da bike" />
-      <p>
-        {" "}
-        {quantity ?? '1'} x {model} - R$ {price},00
-      </p>
+      <img src={biker} alt="Imagem da bike" />
+      <p> Tempo restante 30min</p>
       {props.showRemoveButton && (
         <button
           data-testid="remove"

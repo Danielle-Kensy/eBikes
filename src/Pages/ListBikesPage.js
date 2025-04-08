@@ -7,12 +7,13 @@ import BikeCard from "../Components/BikeCard";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import { FloatButton, Drawer, Modal, Button, Radio, notification } from "antd";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import { FieldTimeOutlined } from "@ant-design/icons";
 import CartCard from "../Components/CartCard";
 import UseForm from "../Hooks/UseForm";
 import UseGetProtectedData from "../Hooks/UseGetProtected";
 import axios from "axios";
 import { calculateTotal } from "../utils/calculateTotal";
+import loc from "../img/loc.png";
 
 const ListDiv = styled.div`
   display: flex;
@@ -22,6 +23,9 @@ const ListDiv = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  @media (max-width: 768px) {
+    margin-top: 20%;
+  }
 `;
 
 const Grid = styled.div`
@@ -32,6 +36,12 @@ const Grid = styled.div`
 
   img {
     grid-column: 2;
+  }
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
@@ -77,12 +87,104 @@ const StyledButton = styled.button`
   }
 `;
 
+const StyledFloatButton = styled.button`
+  background-color: #93b48b;
+  inset-inline-end: 24px;
+  inset-block-end: 48px;
+  margin: 0;
+  padding: 0;
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  width: 60px;
+  height: 60px;
+`;
+
+const StyledText = styled.p`
+  font-size: 20px;
+  color: white;
+  margin-top: 240px;
+  color: #a8a2a27c;
+`;
+
+const StyledWarning = styled.p`
+  font-size: 10px;
+  color: white;
+  //margin-top: 240px;
+  color: #a8a2a2ff;
+`;
+
 const ListBikesPage = () => {
-  UseProtectedPage();
+  //UseProtectedPage();
 
   //dados retornados da API
-  const [getBikes] = UseGetData("/bike", {});
+  //const [getBikes] = UseGetData("/bike", {});
   const [getUser] = UseGetProtectedData("user/profile", {});
+
+  const getBikes = [
+    {
+      id: "1",
+      charge: 20,
+      marches: 6,
+      brand: "Caloi",
+      model: "Aro 20",
+      price: 1000,
+      categorys: ["Estação Centro Histórico", "Catraca 5"],
+      img: "https://github.com/Danielle-Kensy/eBikes/blob/main/src/img/b2.png?raw=true",
+    },
+    {
+      id: "2",
+      charge: 10,
+      marches: 6,
+      brand: "Caloi",
+      model: "Aro 20",
+      price: 1000,
+      categorys: ["Estação Centro Histórico", "Catraca 4"],
+      img: "https://github.com/Danielle-Kensy/eBikes/blob/main/src/img/b2.png?raw=true",
+    },
+    {
+      id: "3",
+      charge: 40,
+      marches: 6,
+      brand: "Caloi",
+      model: "Aro 20",
+      price: 1000,
+      categorys: ["Estação Centro Histórico", "Catraca 7"],
+      img: "https://github.com/Danielle-Kensy/eBikes/blob/main/src/img/b2.png?raw=true",
+    },
+    {
+      id: "4",
+      charge: 30,
+      marches: 6,
+      brand: "Caloi",
+      model: "Aro 20",
+      price: 1000,
+      categorys: ["Estação Centro Histórico", "Catraca 9"],
+      img: "https://github.com/Danielle-Kensy/eBikes/blob/main/src/img/b2.png?raw=true",
+    },
+    {
+      id: "5",
+      charge: 10,
+      marches: 6,
+      brand: "Caloi",
+      model: "Aro 20",
+      price: 1000,
+      categorys: ["Estação Centro Histórico", "Catraca 10"],
+      img: "https://github.com/Danielle-Kensy/eBikes/blob/main/src/img/b2.png?raw=true",
+    },
+    {
+      id: "6",
+      charge: 15,
+      marches: 6,
+      brand: "Caloi",
+      model: "Aro 20",
+      price: 1000,
+      categorys: ["Estação Centro Histórico", "Catraca 11"],
+      img: "https://github.com/Danielle-Kensy/eBikes/blob/main/src/img/b2.png?raw=true",
+    },
+  ];
 
   const [notify, contextHolder] = notification.useNotification();
 
@@ -106,14 +208,14 @@ const ListBikesPage = () => {
   const removeItemFromCart = (id) => {
     const newPurchaseList = purchaseList.filter((item) => item.id !== id);
     setPurchaseList(newPurchaseList);
-    notify.error({
-      message: 'Produto removido do carrinho!',
+    notify.success({
+      message: "Bike devolvida com sucesso!",
     });
   };
 
   // Método que adiciona item no carrinho
   const addItemToCart = (bike) => {
-    console.log('teste')
+    console.log("teste");
     const newPurchaseList = [
       ...purchaseList,
       <CartCard
@@ -130,11 +232,13 @@ const ListBikesPage = () => {
   const bikesList =
     getBikes?.length > 0 &&
     getBikes.map((bike) => {
-      return <BikeCard key={bike.id} bike={bike} addItemToCart={addItemToCart} />;
+      return (
+        <BikeCard key={bike.id} bike={bike} addItemToCart={addItemToCart} />
+      );
     });
 
-    console.log(bikesList)
-    console.log(purchaseList)
+  console.log(bikesList);
+  console.log(purchaseList);
 
   //método para administrar o carrinho
   const onClose = () => {
@@ -173,7 +277,7 @@ const ListBikesPage = () => {
       .then(() => {
         setIsLoading(false);
         notify.success({
-          message: 'Pedido realizado com sucesso, confira em meus pedidos!',
+          message: "Pedido realizado com sucesso, confira em meus pedidos!",
         });
         setIsModalOpen(false);
         cleanFields();
@@ -183,7 +287,7 @@ const ListBikesPage = () => {
         console.log(err);
         setIsLoading(false);
         notify.error({
-          message: 'Erro ao realizar o pedido, tente novamente',
+          message: "Erro ao realizar o pedido, tente novamente",
         });
       });
   };
@@ -202,38 +306,49 @@ const ListBikesPage = () => {
       {contextHolder}
       <Header />
       <ListDiv>
+        <h1>
+          Bikes próximas{" "}
+          <img width={"30px"} src={loc} alt="icone localização" />
+        </h1>
         {bikesList && bikesList.length > 0 ? (
           <Grid>{bikesList}</Grid>
         ) : (
           <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
         )}
       </ListDiv>
-      <FloatButton
-        shape="circle"
-        type="primary"
-        style={{ right: 94 }}
-        icon={<ShoppingCartOutlined />}
+      <StyledFloatButton
+        shape="square"
+        style={{ marginBlock: "80px" }}
         onClick={() => setOpen(true)}
-        data-testid="cart"
-      />
+      >
+        <FieldTimeOutlined style={{ fontSize: "30px" }} />
+      </StyledFloatButton>
+
       <Drawer
-        title="Carrinho 🛒"
+        title="Bikes Ativas 🚲"
         onClose={onClose}
         open={open}
-        footer={[
-          <div key={'footer'}>
-            <p>Total: R${calculateTotal(purchaseList)},00</p>
-            <StyledButton
-              key="back"
-              onClick={() => openModalCloseDrawer()}
-              style={{ width: "100%" }}
-            >
-              Finalizar Compra
-            </StyledButton>
-          </div>,
-        ]}
+        // footer={[
+        //   <div key={"footer"}>
+        //     <p>Total: R${calculateTotal(purchaseList)},00</p>
+        //     <StyledButton
+        //       key="back"
+        //       onClick={() => openModalCloseDrawer()}
+        //       style={{ width: "100%" }}
+        //     >
+        //       Finalizar Compra
+        //     </StyledButton>
+        //   </div>,
+        // ]}
       >
-        {purchaseList}
+        {purchaseList.length <= 0 ? (
+          <StyledText>As bikes alugadas aparecerão aqui!</StyledText>
+        ) : (
+          <>
+            {purchaseList}
+            <StyledWarning>*clique no X após encaixar a bike na catraca para desativa-lá!</StyledWarning>
+          </>
+        )}
       </Drawer>
       <Modal
         title={<h2>Finalize sua compra</h2>}
@@ -278,8 +393,12 @@ const ListBikesPage = () => {
             <option value={""} disabled>
               Escolha o tipo
             </option>
-            <option data-testid="bill" value={"bill"}>Boleto</option>
-            <option data-testid="card" value={"card"}>Cartão</option>
+            <option data-testid="bill" value={"bill"}>
+              Boleto
+            </option>
+            <option data-testid="card" value={"card"}>
+              Cartão
+            </option>
           </select>
 
           {form.type === "card" && (

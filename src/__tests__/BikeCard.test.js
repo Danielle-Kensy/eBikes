@@ -10,10 +10,10 @@ describe(BikeCard, () => {
       id: 1,
       model: "Bike 1",
       price: 100,
-      brand: "Bike 1",
+      brand: "Caloi",
       marches: 1,
       img: "https://i.imgur.com/q3n3g6a.jpg",
-      categorys: ["Category 1", "Category 2"],
+      categorys: ["Category 1"],
     };
     //renderiza o componente de bikeCard
     render(<BikeCard bike={mockBike} />);
@@ -25,7 +25,8 @@ describe(BikeCard, () => {
     fireEvent.click(screen.getByText("Comprar"));
 
     waitFor(() => {
-      expect(screen.getByText("Detalhes Bike 1")).toBeInTheDocument();
+      expect(screen.getByText("Detalhes Bike 1 Caloi")).toBeInTheDocument();
+      expect(screen.getByText("Category 1")).toBeInTheDocument();
     });
   });
 
@@ -34,7 +35,7 @@ describe(BikeCard, () => {
       id: 1,
       model: "Bike 1",
       price: 100,
-      brand: "Bike 1",
+      brand: "Caloi",
       marches: 1,
       img: "https://i.imgur.com/q3n3g6a.jpg",
       categorys: ["Category 1", "Category 2"],
@@ -55,7 +56,7 @@ describe(BikeCard, () => {
     fireEvent.click(screen.getByText("Cancelar"));
 
     waitFor(() => {
-      expect(screen.queryByText("Detalhes Bike 1")).toBeNull();
+      expect(screen.queryByText("Detalhes Bike 1 Caloi")).not.toBeInTheDocument();
     });
   });
 });
